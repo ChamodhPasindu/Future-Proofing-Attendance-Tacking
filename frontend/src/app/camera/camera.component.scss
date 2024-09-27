@@ -1,0 +1,50 @@
+.camera-container {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: flex-start;
+    margin-top: 20px;
+    gap: 30px; // Add some spacing between the sections
+    height: 70vh;
+  }
+  
+  .camera-section {
+    flex: 1;
+    max-width: 600px;
+  }
+  
+  video {
+    width: 100%;
+    border: 3px solid #007bff;
+    border-radius: 10px;
+  }
+  
+  .button-group {
+    margin-top: 10px;
+    display: flex;
+    gap: 15px; /* Add spacing between the buttons */
+  }
+  
+  .employee-detail-card {
+    flex: 1; /* Make the employee card flexible in size */
+    max-width: 400px; /* Set a maximum width */
+    padding: 20px; /* Add some padding inside the card */
+    background-color: #f8f9fa; /* Light background color for better readability */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for depth */
+    border-radius: 10px; /* Slightly round the corners */
+    transition: transform 0.2s; /* Smooth hover effect */
+  }
+  
+  .employee-detail-card mat-card-header {
+    border-radius: 10px 10px 0 0; /* Rounded top corners */
+    padding: 10px;
+  }
+  
+  .employee-detail-card p {
+    margin: 10px 0;
+    font-size: 16px;
+  }
+  
+  .camera-container > .employee-detail-card {
+    margin-left: 30px; /* More space between camera and employee details */
+  }
+  

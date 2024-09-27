@@ -1,0 +1,79 @@
+.employee-register-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 40px;
+    margin-top: 20px;
+    padding: 20px;
+  }
+  
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 15px;
+    color: #3f51b5;
+  }
+  
+  .camera-section {
+    flex: 1;
+    max-width: 600px;
+    text-align: center;
+  }
+  
+  .camera-feed {
+    width: 100%;
+    max-width: 100%;
+    border: 3px solid #007bff;
+    border-radius: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .camera-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+  }
+  
+  button {
+    min-width: 120px;
+  }
+  
+  .employee-list-section {
+    flex: 1;
+    max-width: 400px;
+  }
+  
+  .employee-select {
+    width: 100%;
+  }
+  
+  mat-card {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 15px;
+  }
+  
+  mat-card-header {
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 15px;
+  }
+  
+  mat-card-title {
+    font-size: 1.75rem;
+    font-weight: bold;
+    color: #007bff;
+  }
+  
+  /* Styling for Submit Button */
+  .submit-section {
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px;
+    border-top: 1px solid #ddd;
+  }
+  
+  .submit-section button {
+    min-width: 150px;
+  }
+  

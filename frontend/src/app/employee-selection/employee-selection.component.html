@@ -1,0 +1,56 @@
+<mat-card>
+    <mat-card-header>
+      <mat-card-title>View Employee Attendance</mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <mat-form-field appearance="fill">
+        <mat-label>Select Employee</mat-label>
+        <mat-select [(ngModel)]="selectedEmployee">
+          <mat-option *ngFor="let employee of employees" [value]="employee">{{ employee.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill">
+        <mat-label>Select Month</mat-label>
+        <input matInput [matDatepicker]="picker" placeholder="Choose a year and month" [(ngModel)]="selectedDate" (focus)="picker.open()">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker startView="multi-year" (monthSelected)="chosenMonthHandler($event, picker)" panelClass="month-picker"></mat-datepicker>
+      </mat-form-field>
+  
+      <div class="button-wrapper">
+        <button mat-raised-button color="primary" (click)="viewAttendance()">View Attendance</button>
+      </div>
+  
+      <div *ngIf="attendance">
+        <p><strong>In Time:</strong> {{ attendance.inTime }}</p>
+        <p><strong>Out Time:</strong> {{ attendance.outTime }}</p>
+      </div>
+    </mat-card-content>
+  
+    <mat-card-content>
+      <table mat-table [dataSource]="todayAttendance" class="mat-elevation-z8">
+        <!-- Employee Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Employee Name </th>
+          <td mat-cell *matCellDef="let employee"> {{employee.name}} </td>
+        </ng-container>
+  
+        <!-- In Time Column -->
+        <ng-container matColumnDef="inTime">
+          <th mat-header-cell *matHeaderCellDef> In Time </th>
+          <td mat-cell *matCellDef="let employee"> {{employee.inTime}} </td>
+        </ng-container>
+  
+        <!-- Out Time Column -->
+        <ng-container matColumnDef="outTime">
+          <th mat-header-cell *matHeaderCellDef> Out Time </th>
+          <td mat-cell *matCellDef="let employee"> {{employee.outTime}} </td>
+        </ng-container>
+  
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+  

@@ -1,0 +1,27 @@
+mat-card {
+  margin-top: 20px; // Adjust margin as needed
+}
+
+mat-card-header{
+  margin-bottom: 20px;
+}
+
+mat-form-field {
+  display: block;
+  width: 100%;
+  margin-bottom: 20px;
+  /* Adds space between input fields */
+}
+
+.button-wrapper {
+  margin-top: 20px;
+  /* Adds space between the input fields and the button */
+}
+
+button {
+  display: block;
+}
+
+table{
+  margin-top: 20px;
+}
