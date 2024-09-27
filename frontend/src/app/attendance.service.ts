@@ -9,11 +9,11 @@ export class AttendanceService {
   private baseUrl = 'http://127.0.0.1:5000';
   constructor(private http: HttpClient) {}
 
-  registerCustomer(image: File, employeeId: number, employeeName: string): Observable<any> {
+  registerCustomer(image: File, employeeId: string, employeeName: string): Observable<any> {
     const url = `${this.baseUrl}/register`;
     const formData: FormData = new FormData();
     formData.append('image', image, image.name);
-    formData.append('employeeId', employeeId.toString());
+    formData.append('tag', employeeId);
     formData.append('name', employeeName);
 
     const headers = new HttpHeaders();
@@ -29,6 +29,11 @@ export class AttendanceService {
     const headers = new HttpHeaders();
 
     return this.http.post<any>(url, formData, { headers });
+  }
+
+  getAllEmployees(): Observable<any> {
+    const url = `${this.baseUrl}/employees`;
+    return this.http.get<any>(url);
   }
 
   dataURItoFile(dataURI: string, filename: string): File {

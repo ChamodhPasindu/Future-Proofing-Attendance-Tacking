@@ -10,13 +10,20 @@ export class EmployeeRegisterComponent implements OnInit {
   @ViewChild('video', { static: false }) video!: ElementRef;
   capturedImage: any = null;
   selectedEmployee: any = null;
-  employees = [
-    { id: 1, name: 'John Doe' },
-    { id: 2, name: 'Jane Smith' },
-  ];
+  employees: any[] = [];
 
   constructor(private service: AttendanceService) {}
-  ngOnInit(): void {}
+
+  ngOnInit(): void {
+    this.service.getAllEmployees().subscribe({
+      next: (res) => {
+        this.employees = res.data;
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
 
   enableCamera() {
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -55,7 +62,7 @@ export class EmployeeRegisterComponent implements OnInit {
       this.service
         .registerCustomer(
           imageFile,
-          this.selectedEmployee.id,
+          this.selectedEmployee.tag,
           this.selectedEmployee.name
         )
         .subscribe({

@@ -9,13 +9,7 @@ import { AttendanceService } from '../attendance.service';
 export class CameraComponent {
   @ViewChild('video', { static: false }) video!: ElementRef;
   capturedImage: any = null;
-  selectedEmployee = {
-    name: 'John Doe',
-    id: 'E001',
-    status: 'Present',
-    inTime: '09:00 AM',
-    outTime: '05:00 PM',
-  };
+  selectedEmployee:any;
 
   constructor(private service: AttendanceService) {}
 
@@ -46,7 +40,6 @@ export class CameraComponent {
     }
   }
 
-  // Add this method in your component
   recognizeCustomer() {
     if (this.capturedImage) {
       const imageFile = this.service.dataURItoFile(
@@ -54,11 +47,10 @@ export class CameraComponent {
         'captured-image.png'
       );
 
-      // Call the recognition API through the service
       this.service.recognizeCustomer(imageFile).subscribe({
         next: (res) => {
           console.log('Recognition successful:', res);
-          this.selectedEmployee = res; // Assuming the response has employee data
+          this.selectedEmployee = res.data; 
         },
         error: (err) => {
           console.error('Error during recognition:', err);
