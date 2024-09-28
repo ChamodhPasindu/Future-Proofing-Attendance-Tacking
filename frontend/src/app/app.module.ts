@@ -4,7 +4,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CameraComponent } from './camera/camera.component';
-import { AttendanceTableComponent } from './attendance-table/attendance-table.component';
 import { EmployeeSelectionComponent } from './employee-selection/employee-selection.component';
 import { TodayAttendanceComponent } from './today-attendance/today-attendance.component';
 
@@ -31,17 +30,18 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { EmployeeRegisterComponent } from './employee-register/employee-register.component';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
     AppComponent,
     CameraComponent,
-    AttendanceTableComponent,
     EmployeeSelectionComponent,
     TodayAttendanceComponent,
     EmployeeRegisterComponent
   ],
   imports: [
+    CommonModule,
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,

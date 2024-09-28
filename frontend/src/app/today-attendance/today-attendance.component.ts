@@ -1,16 +1,26 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { AttendanceService } from '../attendance.service';
 
 @Component({
   selector: 'app-today-attendance',
   templateUrl: './today-attendance.component.html',
   styleUrls: ['./today-attendance.component.scss'],
 })
-export class TodayAttendanceComponent {
-  todayAttendance = [
-    { name: 'John Doe', inTime: '09:00 AM', outTime: '05:00 PM' },
-    { name: 'Jane Smith', inTime: '09:15 AM', outTime: '05:10 PM' },
-    // Add more employee data here...
-  ];
+export class TodayAttendanceComponent implements OnInit {
+  todayAttendance :any[]=[]
 
-  displayedColumns: string[] = ['name', 'inTime', 'outTime'];
+  displayedColumns: string[] = [ 'id' ,'name', 'inTime', 'outTime','status'];
+
+  constructor(private service: AttendanceService) {}
+  ngOnInit(): void {
+    this.service.getAllTodayAttendance().subscribe({
+      next: (res) => {
+        this.todayAttendance = res.data;
+        console.log(res);
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
 }

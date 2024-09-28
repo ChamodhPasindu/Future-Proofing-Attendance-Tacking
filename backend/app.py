@@ -10,8 +10,10 @@ from datetime import datetime
 from datetime import datetime, time
 from flask import jsonify
 import logging
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 # Replace with your MongoDB URI
 client = MongoClient('mongodb://127.0.0.1:27017')
@@ -60,6 +62,7 @@ def mark_attendance(employee):
                 "date": current_datetime,  # Store as full datetime
                 "status": status,
                 "checkInTime": check_in_time,
+                "checkOutTime":check_in_time
             }
 
             # Insert the new attendance record
@@ -178,12 +181,14 @@ def get_all_employees():
 
         employee_list = []
         for employee in employees:
+            print(employee)
             employee_data = {
                 "name": employee.get("name"),
                 "email": employee.get("email"),
                 "designation": employee.get("designation"),
                 "department": employee.get("department"),
                 "tag": employee.get("tag"),
+                "id": str(employee.get("_id"))
             }
             employee_list.append(employee_data)
 
@@ -193,6 +198,105 @@ def get_all_employees():
         print("Error fetching employees:", str(e))
         return jsonify(create_response(500, "Internal Server Error")), 500
 
+
+@app.route('/attendance/today', methods=['GET'])
+def get_today_attendance():
+    try:
+        # Get the current date (without the time component)
+        current_date = datetime.now().date()
+
+        # Fetch attendance records for today
+        today_attendance = attendance_collection.find({
+            "date": {
+                "$gte": datetime.combine(current_date, time(0, 0)),
+                "$lt": datetime.combine(current_date, time(23, 59))
+            }
+        })
+
+        # Prepare the list to store attendance data
+        attendance_list = []
+
+        # Iterate over each attendance record
+        for record in today_attendance:
+            # Fetch employee details from the employee collection using the employee ID
+            employee = employees_collection.find_one({"_id": ObjectId(record["employee"])})
+
+            if employee:
+                # Convert checkInTime and checkOutTime to ISO 8601 format if they exist
+                check_in_time = record.get("checkInTime").strftime('%Y-%m-%dT%H:%M:%S') if record.get("checkInTime") else None
+                check_out_time = record.get("checkOutTime").strftime('%Y-%m-%dT%H:%M:%S') if record.get("checkOutTime") else None
+
+                attendance_data = {
+                    "employee_name": employee.get("name"),
+                    "employee_tag": employee.get("tag"),
+                    "status": record.get("status"),
+                    "checkInTime": check_in_time,
+                    "checkOutTime": check_out_time,
+                    "notes": record.get("notes", "")
+                }
+                attendance_list.append(attendance_data)
+
+        # If no attendance records are found for today
+        if not attendance_list:
+            return jsonify(create_response(404, "No attendance records found for today")), 404
+
+        # Return the attendance list for today
+        return jsonify(create_response(200, "Today's attendance fetched successfully", attendance_list)), 200
+
+    except Exception as e:
+        logging.error(f"Error fetching today's attendance: {str(e)}")
+        return jsonify(create_response(500, "Internal Server Error")), 500
+
+@app.route('/attendance/employees', methods=['GET'])
+def get_driver_attendance():
+    try:
+        # Extract query parameters
+        employee_id = request.args.get('employee_id')
+        year = int(request.args.get('year'))
+        month = int(request.args.get('month'))
+
+        if not employee_id or not year or not month:
+            return jsonify({"code": 400, "message": "Missing required parameters"}), 400
+
+        # Define the date range for the specified year and month
+        start_date = datetime(year, month, 1)
+        if month == 12:
+            end_date = datetime(year + 1, 1, 1)
+        else:
+            end_date = datetime(year, month + 1, 1)
+
+        # Query attendance collection
+        attendance_records = attendance_collection.find({
+            "employee": ObjectId(employee_id),
+            "date": {
+                "$gte": start_date,
+                "$lt": end_date
+            }
+        })
+
+        # Format the result as a list of dictionaries
+        records = []
+        for record in attendance_records:
+            records.append({
+                "checkInTime": record.get("checkInTime").strftime('%Y-%m-%d %H:%M:%S') if record.get("checkInTime") else None,
+                "checkOutTime": record.get("checkOutTime").strftime('%Y-%m-%d %H:%M:%S') if record.get("checkOutTime") else None,
+                "status": record.get("status"),
+                "notes": record.get("notes", ""),
+                "date": record.get("date").strftime('%Y-%m-%d'),
+            })
+
+        if not records:
+            return jsonify({"code": 404, "message": "No records found for the specified employee"}), 404
+
+        # Return the formatted attendance records
+        return jsonify({"code": 200, "data": records, "message": "employee attendance fetched successfully"}), 200
+
+    except Exception as e:
+        print(f"Error fetching employee attendance: {str(e)}")
+        return jsonify({"code": 500, "message": "Internal Server Error"}), 500
+    
 if __name__ == '__main__':
     app.run(debug=True)
+
+
 

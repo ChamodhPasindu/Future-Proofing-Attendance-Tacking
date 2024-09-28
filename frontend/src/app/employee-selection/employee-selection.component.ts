@@ -1,41 +1,58 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDatepicker } from '@angular/material/datepicker';
 import * as moment from 'moment';
 import { Moment } from 'moment';
+import { AttendanceService } from '../attendance.service';
 
 @Component({
   selector: 'app-employee-selection',
   templateUrl: './employee-selection.component.html',
   styleUrls: ['./employee-selection.component.scss'],
 })
-export class EmployeeSelectionComponent {
-  employees = [
-    { name: 'John Doe', id: 'E001' },
-    { name: 'Jane Smith', id: 'E002' },
-    // Add more employees...
-  ];
+export class EmployeeSelectionComponent implements OnInit {
+  employees: any[] = [];
 
-  displayedColumns = ['name','inTime','outTime']
+  displayedColumns: string[] = ['date', 'inTime', 'outTime', 'status'];
+
+  selectedYear: number | null = null;
+  selectedMonth: number | null = null;
 
   selectedEmployee: any;
   selectedDate: any;
-  attendance: any;
-  
-  todayAttendance:any;
+
+  todayAttendance: any;
+
+  constructor(private service: AttendanceService) {}
+  ngOnInit(): void {
+    this.service.getAllEmployees().subscribe({
+      next: (res) => {
+        this.employees = res.data;
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
 
   viewAttendance() {
-    // Simulate retrieving attendance based on the selected employee and date
-    this.attendance = {
-      inTime: '09:00 AM',
-      outTime: '05:00 PM',
-    };
+    console.log(this.selectedEmployee, this.selectedDate);
+    this.selectedYear = this.selectedDate.year();
+    this.selectedMonth = this.selectedDate.month() + 1;
+    this.service.getEmployeeAttendance(this.selectedEmployee.id,this.selectedYear!,this.selectedMonth!).subscribe({
+      next: (res) => {
+        this.employees = res.data;
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
-  
-  chosenMonthHandler(normalizedMonth: Moment, datepicker: MatDatepicker<Moment>) {
-    const ctrlValue = this.selectedDate || moment();
-    ctrlValue.month(normalizedMonth.month());
-    ctrlValue.year(normalizedMonth.year());
-    this.selectedDate = ctrlValue;
+
+  chosenMonthHandler(normalizedMonth: Date, datepicker: MatDatepicker<Moment>) {
+    this.selectedYear = normalizedMonth.getFullYear();
+    this.selectedMonth = normalizedMonth.getMonth() + 1;
+    console.log(this.selectedDate,this.selectedYear,this.selectedMonth);
+    
     datepicker.close();
   }
 }

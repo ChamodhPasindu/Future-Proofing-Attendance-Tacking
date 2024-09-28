@@ -36,6 +36,16 @@ export class AttendanceService {
     return this.http.get<any>(url);
   }
 
+  getAllTodayAttendance(): Observable<any> {
+    const url = `${this.baseUrl}/attendance/today`;
+    return this.http.get<any>(url);
+  }
+
+  getEmployeeAttendance(employeeId: string, year: number, month: number): Observable<any> {
+    const params = {employee_id:employeeId,year:year,month:month}
+    return this.http.get<any>(this.baseUrl + `/attendance/employees`,{params});
+  }
+
   dataURItoFile(dataURI: string, filename: string): File {
     const byteString = atob(dataURI.split(',')[1]);
     const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
