@@ -20,7 +20,7 @@ export class EmployeeSelectionComponent implements OnInit {
   selectedEmployee: any;
   selectedDate: any;
 
-  todayAttendance: any;
+  attendance: any[]=[];
 
   constructor(private service: AttendanceService) {}
   ngOnInit(): void {
@@ -35,12 +35,11 @@ export class EmployeeSelectionComponent implements OnInit {
   }
 
   viewAttendance() {
-    console.log(this.selectedEmployee, this.selectedDate);
     this.selectedYear = this.selectedDate.year();
     this.selectedMonth = this.selectedDate.month() + 1;
     this.service.getEmployeeAttendance(this.selectedEmployee.id,this.selectedYear!,this.selectedMonth!).subscribe({
       next: (res) => {
-        this.employees = res.data;
+        this.attendance = res.data;
       },
       error: (err) => {
         console.log(err);
