@@ -42,5 +42,5 @@ testem.log
 Thumbs.db
 /employee-attendance-tracking-system/node_modules
 /backend/venv
-/backend/images
+/backend/images/
 /frontend/node_modules

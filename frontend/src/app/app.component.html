@@ -1,27 +1,17 @@
 <mat-toolbar color="primary">
   <span>Face Recognition Attendance System</span>
+
+  <!-- Navbar with Links -->
+  <span class="spacer"></span>
+  <nav>
+    <a mat-button routerLink="/camera">Camera & Employee Details</a>
+    <a mat-button routerLink="/today-attendance">Today's Attendance</a>
+    <a mat-button routerLink="/employee-attendance">Employee Attendance</a>
+    <a mat-button routerLink="/register-employee">Register Employee</a>
+  </nav>
 </mat-toolbar>
 
+<!-- Router Outlet to Display Components Based on Route -->
 <div class="container">
-  <mat-tab-group>
-    <!-- Tab 1: Camera and Employee Details -->
-    <mat-tab label="Camera & Employee Details">
-      <app-camera></app-camera>
-    </mat-tab>
-
-    <!-- Tab 2: Today's Attendance of All Employees -->
-    <mat-tab label="Today's Attendance">
-      <app-today-attendance></app-today-attendance>
-    </mat-tab>
-
-    <!-- Tab 3: Selected Employee Attendance by Name and Date -->
-    <mat-tab label="Employee Attendance">
-      <app-employee-selection></app-employee-selection>
-    </mat-tab>
-
-    <!-- Tab 4: register employee -->
-    <mat-tab label="Register Employee">
-      <app-employee-register></app-employee-register>
-    </mat-tab>
-  </mat-tab-group>
+  <router-outlet></router-outlet>
 </div>

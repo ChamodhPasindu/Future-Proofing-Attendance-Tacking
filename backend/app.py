@@ -40,6 +40,7 @@ def create_response(code, message, data=None):
         "data": data if data is not None else {}
     }
 
+
 def mark_attendance(employee):
     try:
         current_datetime = datetime.now()  # Use full datetime instead of just date
@@ -247,6 +248,7 @@ def get_today_attendance():
         logging.error(f"Error fetching today's attendance: {str(e)}")
         return jsonify(create_response(500, "Internal Server Error")), 500
 
+
 @app.route('/attendance/employees', methods=['GET'])
 def get_driver_attendance():
     try:
@@ -295,8 +297,6 @@ def get_driver_attendance():
         print(f"Error fetching employee attendance: {str(e)}")
         return jsonify({"code": 500, "message": "Internal Server Error"}), 500
     
+
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-
