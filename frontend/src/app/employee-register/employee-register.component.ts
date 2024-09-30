@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AttendanceService } from '../attendance.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-employee-register',
@@ -12,15 +13,19 @@ export class EmployeeRegisterComponent implements OnInit {
   selectedEmployee: any = null;
   employees: any[] = [];
 
-  constructor(private service: AttendanceService) {}
+  constructor(private service: AttendanceService,private toastr: ToastrService) {}
 
   ngOnInit(): void {
     this.service.getAllEmployees().subscribe({
       next: (res) => {
+        if(!res.data.length){
+          this.toastr.error('No any employee record found','Empty Results');
+          return;
+        }
         this.employees = res.data;
       },
       error: (err) => {
-        console.log(err);
+        this.toastr.error('Oops,Something went wrong','System Error');
       },
     });
   }
@@ -51,7 +56,6 @@ export class EmployeeRegisterComponent implements OnInit {
     }
   }
 
-  // Submit form
   submitForm() {
     if (this.selectedEmployee && this.capturedImage) {
       const imageFile = this.service.dataURItoFile(
@@ -67,14 +71,14 @@ export class EmployeeRegisterComponent implements OnInit {
         )
         .subscribe({
           next: (res) => {
-            console.log(res);
+            this.toastr.success( 'Registration Successful','Success');
           },
           error: (err) => {
-            console.log(err);
+            this.toastr.error( 'Registration Failed','Error');
           },
         });
     } else {
-      console.error('Please select an employee and capture an image.');
+      this.toastr.warning( 'Please select an employee and capture an image','Details Not Found');
     }
   }
 }

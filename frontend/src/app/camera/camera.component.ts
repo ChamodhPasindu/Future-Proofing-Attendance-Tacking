@@ -1,5 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { AttendanceService } from '../attendance.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-camera',
@@ -11,7 +12,7 @@ export class CameraComponent {
   capturedImage: any = null;
   selectedEmployee:any;
 
-  constructor(private service: AttendanceService) {}
+  constructor(private service: AttendanceService,private toastr: ToastrService) {}
 
   enableCamera() {
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -51,13 +52,15 @@ export class CameraComponent {
         next: (res) => {
           console.log('Recognition successful:', res);
           this.selectedEmployee = res.data; 
+          this.toastr.success( 'Employee Identified','Success');
         },
         error: (err) => {
-          console.error('Error during recognition:', err);
+          this.toastr.error('System cannot identified you.Please Try Again!','Cannot Recognize');
+
         },
       });
     } else {
-      console.error('No image captured for recognition.');
+      this.toastr.warning('','Image not Captured');
     }
   }
 }

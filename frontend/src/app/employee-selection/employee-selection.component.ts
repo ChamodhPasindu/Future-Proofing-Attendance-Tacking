@@ -3,6 +3,7 @@ import { MatDatepicker } from '@angular/material/datepicker';
 import * as moment from 'moment';
 import { Moment } from 'moment';
 import { AttendanceService } from '../attendance.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-employee-selection',
@@ -22,14 +23,19 @@ export class EmployeeSelectionComponent implements OnInit {
 
   attendance: any[]=[];
 
-  constructor(private service: AttendanceService) {}
+  constructor(private service: AttendanceService,private toastr: ToastrService) {}
+
   ngOnInit(): void {
     this.service.getAllEmployees().subscribe({
       next: (res) => {
+        if(!res.data.length){
+          this.toastr.error('No any employee record found','Empty Results');
+          return;
+        }
         this.employees = res.data;
       },
       error: (err) => {
-        console.log(err);
+        this.toastr.error('Oops,Something went wrong','System Error');
       },
     });
   }
@@ -39,10 +45,14 @@ export class EmployeeSelectionComponent implements OnInit {
     this.selectedMonth = this.selectedDate.month() + 1;
     this.service.getEmployeeAttendance(this.selectedEmployee.id,this.selectedYear!,this.selectedMonth!).subscribe({
       next: (res) => {
+        if(!res.data.length){
+          this.toastr.error('No any record found','Empty Results');
+          return;
+        }
         this.attendance = res.data;
       },
       error: (err) => {
-        console.log(err);
+        this.toastr.error('Oops,Something went wrong','System Error');
       },
     });
   }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AttendanceService } from '../attendance.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-today-attendance',
@@ -11,15 +12,18 @@ export class TodayAttendanceComponent implements OnInit {
 
   displayedColumns: string[] = [ 'id' ,'name', 'inTime', 'outTime','status'];
 
-  constructor(private service: AttendanceService) {}
+  constructor(private service: AttendanceService,private toastr: ToastrService) {}
   ngOnInit(): void {
     this.service.getAllTodayAttendance().subscribe({
       next: (res) => {
+        if(!res.data.length){
+          this.toastr.error('No any record found','Empty Results');
+          return;
+        }
         this.todayAttendance = res.data;
-        console.log(res);
       },
       error: (err) => {
-        console.log(err);
+        this.toastr.error('Oops,Something went wrong','System Error');
       },
     });
   }

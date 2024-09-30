@@ -31,6 +31,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { EmployeeRegisterComponent } from './employee-register/employee-register.component';
 import { CommonModule } from '@angular/common';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import { CommonModule } from '@angular/common';
     MatFormFieldModule,
     MatInputModule,
     HttpClientModule,
+    ToastrModule.forRoot(),
   ],
   providers: [ {
     provide: DateAdapter,

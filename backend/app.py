@@ -182,7 +182,6 @@ def get_all_employees():
 
         employee_list = []
         for employee in employees:
-            print(employee)
             employee_data = {
                 "name": employee.get("name"),
                 "email": employee.get("email"),
