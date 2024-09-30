@@ -12,6 +12,7 @@ export class EmployeeRegisterComponent implements OnInit {
   capturedImage: any = null;
   selectedEmployee: any = null;
   employees: any[] = [];
+  isCameraEnabled: boolean = false;
 
   constructor(private service: AttendanceService,private toastr: ToastrService) {}
 
@@ -31,12 +32,28 @@ export class EmployeeRegisterComponent implements OnInit {
   }
 
   enableCamera() {
+    this.isCameraEnabled = true;
+
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
       navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
         this.video.nativeElement.srcObject = stream;
         this.video.nativeElement.play();
       });
     }
+  }
+
+  disableCamera() {
+    this.isCameraEnabled = false;
+    const videoElement = this.video.nativeElement;
+  
+    const stream = videoElement.srcObject as MediaStream;
+  
+    if (stream) {
+      const tracks = stream.getTracks();
+      tracks.forEach(track => track.stop()); 
+    }
+  
+    videoElement.srcObject = null;
   }
 
   capture() {

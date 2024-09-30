@@ -10,17 +10,36 @@ import { ToastrService } from 'ngx-toastr';
 export class CameraComponent {
   @ViewChild('video', { static: false }) video!: ElementRef;
   capturedImage: any = null;
-  selectedEmployee:any;
+  selectedEmployee: any;
+  isCameraEnabled: boolean = false;
 
-  constructor(private service: AttendanceService,private toastr: ToastrService) {}
+  constructor(
+    private service: AttendanceService,
+    private toastr: ToastrService
+  ) {}
 
   enableCamera() {
+    this.isCameraEnabled = true;
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
       navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
         this.video.nativeElement.srcObject = stream;
         this.video.nativeElement.play();
       });
     }
+  }
+
+  disableCamera() {
+    this.isCameraEnabled = false;
+    const videoElement = this.video.nativeElement;
+  
+    const stream = videoElement.srcObject as MediaStream;
+  
+    if (stream) {
+      const tracks = stream.getTracks();
+      tracks.forEach(track => track.stop()); 
+    }
+  
+    videoElement.srcObject = null;
   }
 
   capture() {
@@ -51,16 +70,18 @@ export class CameraComponent {
       this.service.recognizeCustomer(imageFile).subscribe({
         next: (res) => {
           console.log('Recognition successful:', res);
-          this.selectedEmployee = res.data; 
-          this.toastr.success( 'Employee Identified','Success');
+          this.selectedEmployee = res.data;
+          this.toastr.success('Employee Identified', 'Success');
         },
         error: (err) => {
-          this.toastr.error('System cannot identified you.Please Try Again!','Cannot Recognize');
-
+          this.toastr.error(
+            'System cannot identified you.Please Try Again!',
+            'Cannot Recognize'
+          );
         },
       });
     } else {
-      this.toastr.warning('','Image not Captured');
+      this.toastr.warning('', 'Image not Captured');
     }
   }
 }

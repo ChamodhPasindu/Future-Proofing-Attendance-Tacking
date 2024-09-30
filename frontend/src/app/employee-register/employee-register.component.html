@@ -9,7 +9,8 @@
       <h3 class="section-title">Camera</h3>
       <video #video autoplay class="camera-feed"></video>
       <div class="camera-actions">
-        <button mat-raised-button color="primary" (click)="enableCamera()">Enable Camera</button>
+        <button  *ngIf="!isCameraEnabled"  mat-raised-button color="primary" (click)="enableCamera()">Enable Camera</button>
+        <button  *ngIf="isCameraEnabled"  mat-raised-button color="primary" (click)="disableCamera()">Disable Camera</button>
         <button mat-raised-button color="accent" (click)="capture()">Capture</button>
       </div>
     </div>

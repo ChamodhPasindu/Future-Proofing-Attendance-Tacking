@@ -4,7 +4,8 @@
       <video #video autoplay></video>
       <br>
       <div class="button-group">
-        <button mat-raised-button color="primary" (click)="enableCamera()">Enable Camera</button>
+        <button  *ngIf="!isCameraEnabled"  mat-raised-button color="primary" (click)="enableCamera()">Enable Camera</button>
+        <button  *ngIf="isCameraEnabled"  mat-raised-button color="primary" (click)="disableCamera()">Disable Camera</button>
         <button mat-raised-button color="accent" (click)="capture()">Capture Attendance</button>
       </div>
     </div>
